@@ -12,30 +12,33 @@
 
 #include "libft.h"
 
+static void	ft_error(char *msg)
+{
+	ft_putendl_fd(msg, 2);
+	exit(1);
+}
+
 int	ft_atoi(const char *str)
 {
-	int	i;
-	int	sign;
-	int	result;
+	long	result;
+	int		sign;
 
 	result = 0;
 	sign = 1;
-	i = 0;
-	while (str[i] == '\t' || str[i] == ' ' || str[i] == '\n'
-		|| str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
-		i++;
-	if (str[i] == '+' || str[i] == '-')
+	while (*str == ' ' || (*str >= 9 && *str <= 13)) // Ignora espaços
+		str++;
+	if (*str == '-' || *str == '+')
+		sign = (*str++ == '-') ? -1 : 1;
+	while (*str >= '0' && *str <= '9')
 	{
-		if (str[i] == '-')
-			sign *= -1;
-		i++;
+		result = result * 10 + (*str - '0');
+		if (result * sign > 2147483647 || result * sign < -2147483648)
+			ft_error("Error");
+		str++;
 	}
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		result = result * 10 + (str[i] - '0');
-		i++;
-	}
-	return (sign * result);
+	if (*str != '\0')
+		ft_error("Error");
+	return (result * sign);
 }
 /*
 int main(void)
